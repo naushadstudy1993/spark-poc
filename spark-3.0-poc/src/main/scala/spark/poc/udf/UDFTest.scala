@@ -1,14 +1,27 @@
-package spark.poc.common
+package spark.poc.udf
 
-import org.apache.spark.sql._
-import org.apache.spark.sql.types._
-import org.apache.spark.sql.functions._
+import scala.collection.Seq
+import scala.reflect.api.materializeTypeTag
 
-class UDFClass(n : Int)  extends Serializable{
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.types.IntegerType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
+
+
+object UDFTest {
   
-   def m1(spark : SparkSession) : Unit = {
-     
-     
+  var spark = SparkSession.builder.master("local").getOrCreate( )
+  
+  def main(args : Array[String]) : Unit = {
+    var obj = new UDFClass(1)
+   obj.m1(spark)
+  }
+  
+  def m1() : Unit = {
     var records = Seq(
         List("Naushad", 1000),
         List("Naaz", 2000)
@@ -28,21 +41,9 @@ class UDFClass(n : Int)  extends Serializable{
    
     df =df.withColumn("incr_sal", udf_f1_reg(col("salary")))
     df.show
-    
-    var upperString_UDF = spark.udf.register("upperString", upperString)
-    
-    df.withColumn("name_upper", upperString_UDF(col("name"))).show
-    
-  
-    
-   }
+ }
   
   def udf_f1 = (sal : Int) => {
     sal*2
   }
-  
-  def upperString = (name : String) => {
-    name.toUpperCase()
-  }
-  
 }

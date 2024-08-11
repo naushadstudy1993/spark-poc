@@ -1,8 +1,9 @@
-package spark.poc.common
+package spark.poc.json
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+import scala.collection.Seq
 
 object JsonParser {
 

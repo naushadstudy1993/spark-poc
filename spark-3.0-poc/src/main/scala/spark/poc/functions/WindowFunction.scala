@@ -1,9 +1,10 @@
-package spark.poc.common
+package spark.poc.functions
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions._
+import scala.collection.Seq
 
 
 
@@ -15,16 +16,17 @@ object WindowFunction {
  
 
   def main(args: Array[String]): Unit = {
+    spark.sparkContext.setLogLevel("ERROR")
      
     var input_df = dataLoad
     
     /***Ranking Functions RANK | DENSE_RANK | PERCENT_RANK | NTILE | ROW_NUMBER**/
     
-    allRankFunc(input_df)
-    allRankFuncSQL(input_df)
+    //allRankFunc(input_df)
+    //allRankFuncSQL(input_df)
     
-    max_min(input_df)
-   
+    //max_min(input_df)
+    leetcode_197()  
   }
 
   def dataLoad(): DataFrame = {
@@ -88,6 +90,30 @@ object WindowFunction {
     .withColumn("min", functions.min(col("salary")).over(Window.partitionBy(col("dept"))) )
     .show
     
+  }
+  
+  
+  def leetcode_197() : Unit ={
+    spark.conf.set("spark.sql.crossJoin.enabled", true)
+    var record = Seq(Row(1,"2015-01-01",10),Row(2,"2015-01-02",25), Row(3,"2015-01-03",20), Row(4,"2015-01-04",30))
+    
+    var schema = StructType(Seq(
+      StructField("id", IntegerType,false),
+      StructField("date", StringType, false ),
+      StructField("temperature", IntegerType, false)
+    ))
+    
+    var rdd = spark.sparkContext.parallelize(record)
+    var df =spark.createDataFrame(rdd, schema)
+    df.show
+    
+    var join_df = df.as("t1").join(df.as("t2"))
+    join_df.show
+    
+    
+    df.as("t1").join(df.as("t2"), col("t1.id").equalTo(col("t2.id")+lit(1)) ).show
+    
+    df.as("t1").join(df.as("t2"), col("t1.id").equalTo(col("t2.id")+lit(1)).and(col("t1.temperature").gt(col("t2.temperature")) ) ).show
   }
 
 }
