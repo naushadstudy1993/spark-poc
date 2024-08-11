@@ -1,17 +1,10 @@
-package spark.poc.common
-
-/*import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.Row*/
-
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+package spark.poc.sql.question
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions._
 import java.text.SimpleDateFormat
 import java.sql.Date
+import scala.collection.Seq
 
 
 /** Below Question exercise link
@@ -41,8 +34,8 @@ object SparkTest {
   def main(args : Array[String]): Unit ={
     println("Main Method")
     
-    System.setProperty ("hadoop.home.dir", "C://Users//naush//Documents//Professional//Workspace//Projects//Spark//hadoop//bin" ); 
-    System.load ("C://Users//naush//Documents//Professional//Workspace//Projects//Spark//hadoop//bin//hadoop.dll");
+    System.setProperty ("hadoop.home.dir", "C://Users//naush//Documents//Professional//Workspace//Projects//hadoop//bin" ); 
+    System.load ("C://Users//naush//Documents//Professional//Workspace//Projects//hadoop//bin//hadoop.dll");
     
     this.spark = SparkSession.builder.master("local").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
